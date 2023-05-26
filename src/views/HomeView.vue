@@ -1,18 +1,46 @@
 <template>
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <BrazilMunicipalitiesMap
+      class="map__municipalities__map"
+      :selectedCityCode="selectedCityCode"
+      @city-click="cityClick"
+      @path-map-loaded="pathMapLoaded"
+    >
+    </BrazilMunicipalitiesMap>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
+import { defineComponent, reactive, ref } from 'vue';
+import BrazilMunicipalitiesMap from '@/components/BrazilMunicipalitiesMap.vue'; 
 
 export default defineComponent({
   name: 'HomeView',
   components: {
-    HelloWorld,
+    BrazilMunicipalitiesMap,
   },
+  setup() {
+    const selectedCityCode = ref('')
+    const pathElementsMap = ref<{ [code: string] : Element | null;}>({})
+
+    const pathMapLoaded = (pathMap: { [code: string] : Element | null; }) => {
+      pathElementsMap.value = pathMap
+      // loadData()
+      //   .then(() => colorizePaths())
+    }
+
+    return {
+      selectedCityCode,
+      cityClick: (code: string) => {
+        if(selectedCityCode.value == code) {
+          selectedCityCode.value = ''
+          return
+        }
+        selectedCityCode.value = code;
+      },
+      pathMapLoaded
+    }
+  }
 });
 </script>
