@@ -7,9 +7,16 @@ interface GdpData {
 }
 
 export const fetchData = async () => {
-  const gdpData = gdpPerCapitaBrl2019 as GdpData[]
-  return gdpData.map(item => ({
-    mainValue: item.gdpPerCapitaBrl2019,
-    code: item.code,
-  })) as MunicipalitiesData[]
+  const gdpDataJSON = gdpPerCapitaBrl2019 as GdpData[]
+  const municipalitiesData = [] as MunicipalitiesData[]
+  
+  for (let i = 0; i < gdpDataJSON.length; i++) {
+    const municipalityData  = {
+      mainValue: gdpDataJSON[i].gdpPerCapitaBrl2019,
+      code: gdpDataJSON[i].code,
+    }
+    municipalitiesData.push(municipalityData)
+  }
+
+  return municipalitiesData
 }
