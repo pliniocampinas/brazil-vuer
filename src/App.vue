@@ -7,12 +7,21 @@
 </template>
 
 <style>
+:root {
+  --app-primary-color: #2c3e50;
+  --app-secondary-color: #42b983;
+}
+
+body {
+  background-color: var(--app-primary-color);
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #fff;
 }
 
 nav {
@@ -21,10 +30,10 @@ nav {
 
 nav a {
   font-weight: bold;
-  color: #2c3e50;
+  color: #fff;
 }
 
 nav a.router-link-exact-active {
-  color: #42b983;
+  color: var(--app-secondary-color);
 }
 </style>

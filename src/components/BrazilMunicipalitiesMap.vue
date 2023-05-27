@@ -85,7 +85,7 @@ export default defineComponent({
 .municipalities-map {
   max-width: 500px;
   height: 500px;
-  border: 1px solid black;
+  border: 1px solid var(--app-secondary-color);
   padding: 8px;
 }
 
