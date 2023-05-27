@@ -1,9 +1,5 @@
 export default interface MunicipalitiesData {
-  year: number
-  gdpThousandsBrl: number
-  gdpPerCapitaBrl: number
-  state: string
+  mainValue: number
   code: string
-  name: string
   pathElement?: Element | null
 }

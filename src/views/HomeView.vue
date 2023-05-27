@@ -38,7 +38,6 @@ export default defineComponent({
     const selectedCityCode = ref('')
     const pathElementsMap = ref<{ [code: string] : Element | null;}>({})
     const municipalitiesList = ref<MunicipalitiesData[]>([])
-    const selectedVisualization = ref('gdp-per-capita')
 
     const pathMapLoaded = (pathMap: { [code: string] : Element | null; }) => {
       pathElementsMap.value = pathMap
@@ -49,7 +48,7 @@ export default defineComponent({
     const loadData = async () => {
       try {
         const data = await fetchData()
-        municipalitiesList.value = data.filter(m => m.year === 2019)
+        municipalitiesList.value = data
       } catch(err) {
         console.log('load data error', err)
       }
@@ -57,10 +56,10 @@ export default defineComponent({
 
     const colorizePaths = () => {
       const mainValues = municipalitiesList.value
-        .map(municipality => getMainAttribute(municipality))
+        .map(municipality => municipality.mainValue)
       const getColor = getColorFunction(mainValues)
       municipalitiesList.value.forEach(d => {
-        const color = getColor(d.gdpPerCapitaBrl)
+        const color = getColor(d.mainValue)
         if(!d.pathElement) {
           d.pathElement = pathElementsMap.value[d.code]
         }
@@ -68,16 +67,6 @@ export default defineComponent({
           d.pathElement.setAttribute("fill", color+'')
         }
       })
-    }
-
-    const getMainAttribute = (municipality: MunicipalitiesData) => {
-      if(selectedVisualization.value === 'gdp-per-capita' || selectedVisualization.value === '') {
-        return municipality.gdpPerCapitaBrl
-      }
-      if(selectedVisualization.value === 'total-gdp') {
-        return municipality.gdpThousandsBrl
-      }
-      return 0
     }
 
     return {
