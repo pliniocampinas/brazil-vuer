@@ -82,6 +82,13 @@ export default defineComponent({
 </script>
 
 <style>
+.municipalities-map {
+  max-width: 500px;
+  height: 500px;
+  border: 1px solid black;
+  padding: 8px;
+}
+
 .map__municipality {
   stroke: #232323;
   stroke-width: 0;

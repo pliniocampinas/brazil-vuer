@@ -1,8 +1,6 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
     <BrazilMunicipalitiesMap
-      class="map__municipalities__map"
       :selectedCityCode="selectedCityCode"
       @city-click="cityClick"
       @path-map-loaded="pathMapLoaded"
@@ -12,8 +10,24 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import BrazilMunicipalitiesMap from '@/components/BrazilMunicipalitiesMap.vue'; 
+import { fetchData } from '@/repositories/MunicipalityRepository'
+import { interpolateRdYlGn, scaleQuantile } from "d3";
+import MunicipalitiesData from '@/interfaces/MunicipalitiesData';
+
+const getColorFunction = (dataset: number[]) => {
+  // Between [0, 1], 5 numbers for 5 tones.
+  const scaleOfColor = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+  const interpolator = interpolateRdYlGn
+  const colors = scaleOfColor.map(x => interpolator(x))
+
+  const getColor = scaleQuantile<string, number>()
+    .domain(dataset)
+    .range(colors)
+
+  return getColor
+}
 
 export default defineComponent({
   name: 'HomeView',
@@ -23,11 +37,47 @@ export default defineComponent({
   setup() {
     const selectedCityCode = ref('')
     const pathElementsMap = ref<{ [code: string] : Element | null;}>({})
+    const municipalitiesList = ref<MunicipalitiesData[]>([])
+    const selectedVisualization = ref('gdp-per-capita')
 
     const pathMapLoaded = (pathMap: { [code: string] : Element | null; }) => {
       pathElementsMap.value = pathMap
-      // loadData()
-      //   .then(() => colorizePaths())
+      loadData()
+        .then(() => colorizePaths())
+    }
+
+    const loadData = async () => {
+      try {
+        const data = await fetchData()
+        municipalitiesList.value = data.filter(m => m.year === 2019)
+      } catch(err) {
+        console.log('load data error', err)
+      }
+    }
+
+    const colorizePaths = () => {
+      const mainValues = municipalitiesList.value
+        .map(municipality => getMainAttribute(municipality))
+      const getColor = getColorFunction(mainValues)
+      municipalitiesList.value.forEach(d => {
+        const color = getColor(d.gdpPerCapitaBrl)
+        if(!d.pathElement) {
+          d.pathElement = pathElementsMap.value[d.code]
+        }
+        if(d.pathElement) {
+          d.pathElement.setAttribute("fill", color+'')
+        }
+      })
+    }
+
+    const getMainAttribute = (municipality: MunicipalitiesData) => {
+      if(selectedVisualization.value === 'gdp-per-capita' || selectedVisualization.value === '') {
+        return municipality.gdpPerCapitaBrl
+      }
+      if(selectedVisualization.value === 'total-gdp') {
+        return municipality.gdpThousandsBrl
+      }
+      return 0
     }
 
     return {
@@ -39,6 +89,7 @@ export default defineComponent({
         }
         selectedCityCode.value = code;
       },
+      loadData,
       pathMapLoaded
     }
   }

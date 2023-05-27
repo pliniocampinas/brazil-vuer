@@ -25,5 +25,10 @@ npm run test:unit
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Road Map
+
+
+- [x] Exibir mapa. 
+- [x] Exibir dados mockados. 
+- [ ] Exibir dados de uma api local. 
+- [ ] Configurar UI para escolher uma fonte de dados qualquer(api, arquivos json, csv, etc.)
