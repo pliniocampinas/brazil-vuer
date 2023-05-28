@@ -31,7 +31,7 @@
 import { computed, defineComponent, ref } from 'vue';
 import BrazilMunicipalitiesMap from '@/components/BrazilMunicipalitiesMap.vue'; 
 import MapBrowser from '@/components/MapBrowser.vue'; 
-import { fetchData } from '@/repositories/MunicipalityRepository'
+import { fetchData, fetchNameAndState } from '@/repositories/MunicipalityRepository'
 import { formatCurrencyBrl } from '@/utils/formatters'
 import { interpolateRdYlGn, scaleQuantile } from "d3";
 import MunicipalitiesData from '@/interfaces/MunicipalitiesData';
@@ -57,7 +57,15 @@ export default defineComponent({
   },
   setup() {
     const selectedCityCode = ref('')
-    const selectedCity = computed(() => ({}))
+    const selectedCity = computed(() => {
+      const nameAndState = fetchNameAndState(selectedCityCode.value)
+      const municipality = municipalitiesList.value.find(m => m.code === selectedCityCode.value)
+      return {
+        cityName: nameAndState?.name?? '',
+        stateAcronym: nameAndState?.stateAcronym?? '',
+        mainValue: municipality?.mainValue?? 0,
+      }
+    })
     const pathElementsMap = ref<{ [code: string] : Element | null;}>({})
     const municipalitiesList = ref<MunicipalitiesData[]>([])
     const isLoading = ref(false)

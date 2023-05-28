@@ -1,4 +1,4 @@
-// import * as MunicipalitiesCodes from "@/repositories/municipalities-codes.json";
+import * as MunicipalitiesCodes from "@/repositories/municipalities-codes.json";
 import * as gdpPerCapitaBrl2019 from "@/repositories/gdp-per-capita-2019.json";
 import MunicipalitiesData from '@/interfaces/MunicipalitiesData';
 import { sleep } from "@/utils/timeHelper";
@@ -6,6 +6,11 @@ import { sleep } from "@/utils/timeHelper";
 interface GdpData {
   gdpPerCapitaBrl2019: number
   code: string
+}
+
+interface CityNameWithState {
+  stateAcronym: string
+  name: string
 }
 
 export const fetchData = async () => {
@@ -25,6 +30,18 @@ export const fetchData = async () => {
   return municipalitiesData
 }
 
-export const fetchNames = async () => {
-  return []
+export const fetchNameAndState = (cityCode: string): CityNameWithState | null => {
+  const dataJSON = MunicipalitiesCodes
+
+  for (let i = 0; i < dataJSON.length; i++) {
+    const cityNameWithState = dataJSON[i]
+    if(cityNameWithState.code === cityCode) {
+      return {
+        stateAcronym: cityNameWithState.stateAcronym,
+        name: cityNameWithState.name,
+      }
+    }
+  }
+
+  return null
 }
