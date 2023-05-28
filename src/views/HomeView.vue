@@ -1,18 +1,38 @@
 <template>
   <div class="home">
-    <BrazilMunicipalitiesMap
-      :selectedCityCode="selectedCityCode"
-      @city-click="cityClick"
-      @path-map-loaded="pathMapLoaded"
-    >
-    </BrazilMunicipalitiesMap>
+    <MapBrowser :isLoading="isLoading">
+      <template v-slot:map-svg>
+        <BrazilMunicipalitiesMap
+          :selectedCityCode="selectedCityCode"
+          @city-click="cityClick"
+          @path-map-loaded="pathMapLoaded"
+        >
+        </BrazilMunicipalitiesMap>
+      </template>
+
+      <template v-slot:browser-details>
+        <h4>Município</h4>
+        <template v-if="selectedCity.cityName">
+          <p><strong>Nome:</strong> {{ selectedCity.cityName }}</p>
+          <p><strong>Valor:</strong> {{ selectedCity.mainValue }}</p>
+        </template>
+        <template v-else>
+          <p>
+            Selecione uma cidade para ver detalhes
+          </p>
+          <p style="visibility: hidden;">Placeholder</p>
+        </template>
+      </template>
+    </MapBrowser>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import BrazilMunicipalitiesMap from '@/components/BrazilMunicipalitiesMap.vue'; 
+import MapBrowser from '@/components/MapBrowser.vue'; 
 import { fetchData } from '@/repositories/MunicipalityRepository'
+import { formatCurrencyBrl } from '@/utils/formatters'
 import { interpolateRdYlGn, scaleQuantile } from "d3";
 import MunicipalitiesData from '@/interfaces/MunicipalitiesData';
 
@@ -33,11 +53,14 @@ export default defineComponent({
   name: 'HomeView',
   components: {
     BrazilMunicipalitiesMap,
+    MapBrowser,
   },
   setup() {
     const selectedCityCode = ref('')
+    const selectedCity = computed(() => ({}))
     const pathElementsMap = ref<{ [code: string] : Element | null;}>({})
     const municipalitiesList = ref<MunicipalitiesData[]>([])
+    const isLoading = ref(false)
 
     const pathMapLoaded = (pathMap: { [code: string] : Element | null; }) => {
       pathElementsMap.value = pathMap
@@ -47,10 +70,13 @@ export default defineComponent({
 
     const loadData = async () => {
       try {
+        isLoading.value = true
         const data = await fetchData()
         municipalitiesList.value = data
+        isLoading.value = false
       } catch(err) {
         console.log('load data error', err)
+        isLoading.value = false
       }
     }
 
@@ -71,6 +97,7 @@ export default defineComponent({
 
     return {
       selectedCityCode,
+      selectedCity,
       cityClick: (code: string) => {
         if(selectedCityCode.value == code) {
           selectedCityCode.value = ''
@@ -78,6 +105,8 @@ export default defineComponent({
         }
         selectedCityCode.value = code;
       },
+      formatCurrencyBrl,
+      isLoading,
       loadData,
       pathMapLoaded
     }
