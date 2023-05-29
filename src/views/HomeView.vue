@@ -104,6 +104,7 @@ export default defineComponent({
     }
 
     return {
+      isLoading,
       selectedCityCode,
       selectedCity,
       cityClick: (code: string) => {
@@ -114,7 +115,6 @@ export default defineComponent({
         selectedCityCode.value = code;
       },
       formatCurrencyBrl,
-      isLoading,
       loadData,
       pathMapLoaded
     }

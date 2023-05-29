@@ -45,7 +45,7 @@ export default defineComponent({
 }
 
 .map__browser__svg-container {
-  background-color: #f9f9f9;
+  background-color: #414141;
 }
 
 .map__browser__loading {

@@ -1,5 +1,9 @@
 <template>
   <div class="municipalities-map" ref="chartContainerElement">
+    <div class="municipalities-map__zoom-box">
+      <div class="municipalities-map__zoom-button" @click="zoomIn">+</div>
+      <div class="municipalities-map__zoom-button" @click="zoomOut">-</div>
+    </div>
     <inline-svg 
       :src="require('../assets/municipalities-map.svg')"
       @loaded="svgLoaded"
@@ -14,6 +18,11 @@
 import { defineComponent, ref, watch } from 'vue';
 import InlineSvg from 'vue-inline-svg';
 import svgPanZoom from 'svg-pan-zoom'
+
+interface SvgPanZoomInstance {
+  zoomIn: () => void
+  zoomOut: () => void
+}
 
 export default defineComponent({
   name: 'BrazilMunicipalitiesMap',
@@ -32,13 +41,15 @@ export default defineComponent({
   setup(props, { emit }) {
     const chartContainerElement = ref(null as HTMLElement | null)
     const pathElementsMap: { [code: string] : Element | null; } = {}
+    const panZoomInstance = ref<SvgPanZoomInstance | null>(null)
+    
     const svgLoadError = (e: Error) => {
       console.warn('svgLoadError', e)
     }
 
     const svgLoaded = () => {
-      svgPanZoom('.municipalities-map svg')
       emit('loaded')
+      panZoomInstance.value = svgPanZoom('.municipalities-map svg').setZoomScaleSensitivity(0.4)
 
       if(!chartContainerElement.value) {
         return
@@ -60,6 +71,14 @@ export default defineComponent({
       return chartContainerElement.value?.querySelector(`path[citycode="${code}"]`)
     }
 
+    const zoomIn = () => {
+      panZoomInstance.value?.zoomIn()
+    }
+
+    const zoomOut = () => {
+      panZoomInstance.value?.zoomOut()
+    }
+
     watch(
       () => props.selectedCityCode,
       (code, prevCode) => {
@@ -76,6 +95,8 @@ export default defineComponent({
       chartContainerElement,
       svgLoadError,
       svgLoaded,
+      zoomIn,
+      zoomOut,
     }
   },
 });
@@ -83,6 +104,7 @@ export default defineComponent({
 
 <style>
 .municipalities-map {
+  position: relative;
   max-width: 500px;
   height: 500px;
   border: 1px solid var(--app-secondary-color);
@@ -105,5 +127,24 @@ export default defineComponent({
 .municipalities-map svg {
   width: 100%;
   height: 100%;
+}
+
+.municipalities-map__zoom-box {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.7);
+  height: 76px;
+  right: 10px;
+  top: 10px;
+}
+
+.municipalities-map__zoom-button {
+  background-color: var(--app-primary-color);
+  color: var(--app-secondary-color);
+  border: 1px solid var(--app-secondary-color);
+  font-size: 26px;
+  font-weight: 600;
+  height: 30px;
+  width: 30px;
+  margin: 4px;
 }
 </style>
