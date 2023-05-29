@@ -1,6 +1,12 @@
 <template>
   <div class="home">
     <MapBrowser :isLoading="isLoading">
+      <template v-slot:map-header>
+        <MapBrowserHeader
+          :title="mapName"
+        />
+      </template>
+
       <template v-slot:map-svg>
         <BrazilMunicipalitiesMap
           :selectedCityCode="selectedCityCode"
@@ -24,6 +30,7 @@
 import { computed, defineComponent, ref } from 'vue';
 import BrazilMunicipalitiesMap from '@/components/BrazilMunicipalitiesMap.vue'; 
 import MapBrowser from '@/components/MapBrowser.vue'; 
+import MapBrowserHeader from '@/components/MapBrowserHeader.vue'; 
 import MapBrowserMunicipalityDetails from '@/components/MapBrowserMunicipalityDetails.vue'; 
 import { fetchData, fetchNameAndState } from '@/repositories/MunicipalityRepository'
 import { formatCurrencyBrl } from '@/utils/formatters'
@@ -48,6 +55,7 @@ export default defineComponent({
   components: {
     BrazilMunicipalitiesMap,
     MapBrowser,
+    MapBrowserHeader,
     MapBrowserMunicipalityDetails,
   },
   setup() {
@@ -64,6 +72,7 @@ export default defineComponent({
     const pathElementsMap = ref<{ [code: string] : Element | null;}>({})
     const municipalitiesList = ref<MunicipalitiesData[]>([])
     const isLoading = ref(false)
+    const mapName = ref('Pib per capita 2019')
 
     const pathMapLoaded = (pathMap: { [code: string] : Element | null; }) => {
       pathElementsMap.value = pathMap
@@ -100,6 +109,7 @@ export default defineComponent({
 
     return {
       isLoading,
+      mapName,
       selectedCityCode,
       selectedCity,
       cityClick: (code: string) => {

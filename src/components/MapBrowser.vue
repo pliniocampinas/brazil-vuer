@@ -4,6 +4,10 @@
       <LoadingBars/>
     </div>
 
+    <div class="map-browser__header">
+      <slot name="map-header"></slot>
+    </div>
+
     <div class="map-browser__svg-container">
       <slot name="map-svg"></slot>
     </div>
@@ -42,7 +46,7 @@ export default defineComponent({
   margin: auto;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   position: relative;
-  gap: 8px;
+  gap: 6px;
 }
 
 .map-browser__svg-container {
@@ -58,6 +62,11 @@ export default defineComponent({
   align-items: center;
   justify-content: center;
   z-index: 1;
+}
+
+.map-browser__header {
+  border: 1px solid var(--app-secondary-color);
+  padding: 8px;
 }
 
 .map-browser__details {
