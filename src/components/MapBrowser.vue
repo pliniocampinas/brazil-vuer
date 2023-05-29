@@ -1,14 +1,14 @@
 <template>
-  <div class="map__browser__container">
-    <div class="map__browser__loading" v-if="isLoading">
+  <div class="map-browser__container">
+    <div class="map-browser__loading" v-if="isLoading">
       <LoadingBars/>
     </div>
 
-    <div class="map__browser__svg-container">
+    <div class="map-browser__svg-container">
       <slot name="map-svg"></slot>
     </div>
 
-    <div class="map__browser__details">
+    <div class="map-browser__details">
       <slot name="browser-details"></slot>
     </div>
   </div>
@@ -35,20 +35,21 @@ export default defineComponent({
 </script>
 
 <style>
-.map__browser__container {
+.map-browser__container {
   display: grid;
   grid-template-columns: 1fr;
   max-width: 500px;
   margin: auto;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   position: relative;
+  gap: 8px;
 }
 
-.map__browser__svg-container {
+.map-browser__svg-container {
   background-color: #414141;
 }
 
-.map__browser__loading {
+.map-browser__loading {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -59,12 +60,12 @@ export default defineComponent({
   z-index: 1;
 }
 
-.map__browser__details {
+.map-browser__details {
   border: 1px solid var(--app-secondary-color);
 }
 
 @media screen and (min-width: 768px) {
-  .map__browser__container {
+  .map-browser__container {
     display: grid;
     margin: auto;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;

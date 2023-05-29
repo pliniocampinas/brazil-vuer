@@ -11,17 +11,10 @@
       </template>
 
       <template v-slot:browser-details>
-        <h4>Município</h4>
-        <template v-if="selectedCity.cityName">
-          <p><strong>Nome:</strong> {{ selectedCity.cityName }}</p>
-          <p><strong>Valor:</strong> {{ selectedCity.mainValue }}</p>
-        </template>
-        <template v-else>
-          <p>
-            Selecione uma cidade para ver detalhes
-          </p>
-          <p style="visibility: hidden;">Placeholder</p>
-        </template>
+        <MapBrowserMunicipalityDetails
+          :cityName="selectedCity.cityName"
+          :mainValue="selectedCity.mainValue"
+        />
       </template>
     </MapBrowser>
   </div>
@@ -31,6 +24,7 @@
 import { computed, defineComponent, ref } from 'vue';
 import BrazilMunicipalitiesMap from '@/components/BrazilMunicipalitiesMap.vue'; 
 import MapBrowser from '@/components/MapBrowser.vue'; 
+import MapBrowserMunicipalityDetails from '@/components/MapBrowserMunicipalityDetails.vue'; 
 import { fetchData, fetchNameAndState } from '@/repositories/MunicipalityRepository'
 import { formatCurrencyBrl } from '@/utils/formatters'
 import { interpolateRdYlGn, scaleQuantile } from "d3";
@@ -54,6 +48,7 @@ export default defineComponent({
   components: {
     BrazilMunicipalitiesMap,
     MapBrowser,
+    MapBrowserMunicipalityDetails,
   },
   setup() {
     const selectedCityCode = ref('')
