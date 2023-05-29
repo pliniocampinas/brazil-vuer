@@ -106,7 +106,7 @@ export default defineComponent({
 .municipalities-map {
   position: relative;
   max-width: 500px;
-  height: 500px;
+  height: 450px;
   border: 1px solid var(--app-secondary-color);
   padding: 8px;
 }
@@ -120,7 +120,7 @@ export default defineComponent({
 .map__municipality:hover,
 .map__municipality--selected {
   opacity: 0.7;
-  stroke-width: 3;
+  stroke-width: 2;
   stroke: #cccccc;
 }
 

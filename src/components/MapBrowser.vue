@@ -38,7 +38,7 @@ export default defineComponent({
 .map__browser__container {
   display: grid;
   grid-template-columns: 1fr;
-  max-width: 750px;
+  max-width: 500px;
   margin: auto;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   position: relative;
@@ -59,10 +59,13 @@ export default defineComponent({
   z-index: 1;
 }
 
+.map__browser__details {
+  border: 1px solid var(--app-secondary-color);
+}
+
 @media screen and (min-width: 768px) {
   .map__browser__container {
     display: grid;
-    max-width: 750px;
     margin: auto;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     position: relative;
