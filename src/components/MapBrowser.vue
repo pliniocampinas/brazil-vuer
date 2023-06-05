@@ -4,6 +4,10 @@
       <LoadingBars/>
     </div>
 
+    <div class="map-browser__overlay" v-if="isOverlayOpen">
+      <slot name="map-overlay"></slot>
+    </div>
+
     <div class="map-browser__header">
       <slot name="map-header"></slot>
     </div>
@@ -34,6 +38,10 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
+    isOverlayOpen: {
+      type: Boolean,
+      default: false
+    },
   },
 });
 </script>
@@ -61,6 +69,15 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1;
+}
+
+.map-browser__overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: var(--app-primary-color);
+  border: 1px solid var(--app-secondary-color);
   z-index: 1;
 }
 

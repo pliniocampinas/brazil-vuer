@@ -1,9 +1,19 @@
 <template>
   <div class="home">
-    <MapBrowser :isLoading="isLoading">
+    <MapBrowser :isLoading="isLoading" :isOverlayOpen="isOverlayOpen">
+      <template v-slot:map-overlay>
+        <p>
+          Form Component placeholder
+        </p>
+        <p @click="isOverlayOpen = false">
+          Click here to close
+        </p>
+      </template>
+
       <template v-slot:map-header>
         <MapBrowserHeader
           :title="mapName"
+          @heading-click="headingClick"
         />
       </template>
 
@@ -66,12 +76,13 @@ export default defineComponent({
       return {
         cityName: nameAndState?.name?? '',
         stateAcronym: nameAndState?.stateAcronym?? '',
-        mainValue: municipality?.mainValue?? 0,
+        mainValue: (municipality?.mainValue?? '') + '',
       }
     })
     const pathElementsMap = ref<{ [code: string] : Element | null;}>({})
     const municipalitiesList = ref<MunicipalitiesData[]>([])
     const isLoading = ref(false)
+    const isOverlayOpen = ref(false)
     const mapName = ref('Pib per capita 2019')
 
     const pathMapLoaded = (pathMap: { [code: string] : Element | null; }) => {
@@ -107,8 +118,14 @@ export default defineComponent({
       })
     }
 
+    const headingClick = () => {
+      console.log('headingClick - change state to map options')
+      isOverlayOpen.value = true
+    }
+
     return {
       isLoading,
+      isOverlayOpen,
       mapName,
       selectedCityCode,
       selectedCity,
@@ -119,6 +136,7 @@ export default defineComponent({
         }
         selectedCityCode.value = code;
       },
+      headingClick,
       formatCurrencyBrl,
       loadData,
       pathMapLoaded
