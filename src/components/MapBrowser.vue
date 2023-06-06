@@ -5,6 +5,9 @@
     </div>
 
     <div class="map-browser__overlay" v-if="isOverlayOpen">
+      <div class="map-browser__overlay__button" @click="$emit('overlay-close')">
+        Voltar
+      </div>
       <slot name="map-overlay"></slot>
     </div>
 
@@ -69,16 +72,27 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1;
+  z-index: 2;
 }
 
 .map-browser__overlay {
   position: absolute;
   width: 100%;
   height: 100%;
+  padding: 8px;
+  box-sizing: border-box;
   background-color: var(--app-primary-color);
   border: 1px solid var(--app-secondary-color);
   z-index: 1;
+}
+
+.map-browser__overlay__button {
+  padding: 4px 10px;
+  border: 1px solid var(--app-secondary-color);
+  font-weight: 900;
+  font-size: 18px;
+  text-align: left;
+  margin-bottom: 8px;
 }
 
 .map-browser__header {

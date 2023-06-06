@@ -10,6 +10,7 @@
 :root {
   --app-primary-color: #2c3e50;
   --app-secondary-color: #42b983;
+  --app-alert-color: #802c2c;
 }
 
 body {

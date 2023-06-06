@@ -1,13 +1,12 @@
 <template>
   <div class="home">
-    <MapBrowser :isLoading="isLoading" :isOverlayOpen="isOverlayOpen">
+    <MapBrowser 
+      :isLoading="isLoading" 
+      :isOverlayOpen="isOverlayOpen"
+      @overlay-close="isOverlayOpen = false"
+    >
       <template v-slot:map-overlay>
-        <p>
-          Form Component placeholder
-        </p>
-        <p @click="isOverlayOpen = false">
-          Click here to close
-        </p>
+        <MapBrowserForm @submit="submitMapForm"/>
       </template>
 
       <template v-slot:map-header>
@@ -40,6 +39,7 @@
 import { computed, defineComponent, ref } from 'vue';
 import BrazilMunicipalitiesMap from '@/components/BrazilMunicipalitiesMap.vue'; 
 import MapBrowser from '@/components/MapBrowser.vue'; 
+import MapBrowserForm from '@/components/MapBrowserForm.vue'; 
 import MapBrowserHeader from '@/components/MapBrowserHeader.vue'; 
 import MapBrowserMunicipalityDetails from '@/components/MapBrowserMunicipalityDetails.vue'; 
 import { fetchData, fetchNameAndState } from '@/repositories/MunicipalityRepository'
@@ -65,6 +65,7 @@ export default defineComponent({
   components: {
     BrazilMunicipalitiesMap,
     MapBrowser,
+    MapBrowserForm,
     MapBrowserHeader,
     MapBrowserMunicipalityDetails,
   },
@@ -123,6 +124,10 @@ export default defineComponent({
       isOverlayOpen.value = true
     }
 
+    const submitMapForm = (formData: any) => {
+      console.log('submitMapForm', formData)
+    }
+
     return {
       isLoading,
       isOverlayOpen,
@@ -139,7 +144,8 @@ export default defineComponent({
       headingClick,
       formatCurrencyBrl,
       loadData,
-      pathMapLoaded
+      pathMapLoaded,
+      submitMapForm,
     }
   }
 });
