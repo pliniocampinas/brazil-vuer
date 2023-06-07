@@ -14,7 +14,7 @@
         <input v-model="formInputs.valueKey" class="map-browser-form__input" type="valor principal">
       </label>
 
-      <label class="map-browser-form__label" full> <div>Tipo de dado</div>
+      <label class="map-browser-form__label"> <div>Tipo de dado</div>
         <select class="map-browser-form__input" name="valueType" v-model="formInputs.valueType">
           <option 
             v-for="labelValue in valueTypes"

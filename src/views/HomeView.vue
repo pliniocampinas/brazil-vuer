@@ -121,7 +121,6 @@ export default defineComponent({
     }
 
     const headingClick = () => {
-      console.log('headingClick - change state to map options')
       isOverlayOpen.value = true
     }
 
