@@ -45,6 +45,7 @@ import MapBrowserMunicipalityDetails from '@/components/MapBrowserMunicipalityDe
 import { fetchData, fetchNameAndState } from '@/repositories/MunicipalityRepository'
 import { formatCurrencyBrl } from '@/utils/formatters'
 import { interpolateRdYlGn, scaleQuantile } from "d3";
+import MapBrowserFormInputs from '@/interfaces/MapBrowserFormInputs'
 import MunicipalitiesData from '@/interfaces/MunicipalitiesData';
 
 const getColorFunction = (dataset: number[]) => {
@@ -124,7 +125,7 @@ export default defineComponent({
       isOverlayOpen.value = true
     }
 
-    const submitMapForm = (formData: any) => {
+    const submitMapForm = (formData: MapBrowserFormInputs) => {
       console.log('submitMapForm', formData)
     }
 
