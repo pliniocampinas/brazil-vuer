@@ -42,7 +42,8 @@ import MapBrowser from '@/components/MapBrowser.vue';
 import MapBrowserForm from '@/components/MapBrowserForm.vue'; 
 import MapBrowserHeader from '@/components/MapBrowserHeader.vue'; 
 import MapBrowserMunicipalityDetails from '@/components/MapBrowserMunicipalityDetails.vue'; 
-import { fetchData, fetchNameAndState } from '@/repositories/MunicipalityRepository'
+import { fetchNameAndState } from '@/repositories/StaticMunicipalityRepository'
+import { fetchData } from '@/repositories/RouterRepository'
 import { formatCurrencyBrl } from '@/utils/formatters'
 import { interpolateRdYlGn, scaleQuantile } from "d3";
 import MapBrowserFormInputs from '@/interfaces/MapBrowserFormInputs'
