@@ -1,9 +1,10 @@
 import { csvParse } from "d3";
 import { fetchData as fetchExampleData } from '@/repositories/StaticMunicipalityRepository'
 import MunicipalitiesData from '@/interfaces/MunicipalitiesData';
+import { SourceFormat } from "@/interfaces/Enums";
 
 export interface fetchDataParams {
-  sourceFormat: string
+  sourceFormat: SourceFormat
   sourceUrl: string
   valueKey: string
   cityCodeKey: string
@@ -14,7 +15,7 @@ export const fetchData = async (params: fetchDataParams | null = null): Promise<
     return await fetchExampleData()
   }
 
-  if(params.sourceFormat === 'csv') {
+  if(params.sourceFormat === SourceFormat.Csv) {
     return await fetchCsvData(params.sourceUrl, params.valueKey, params.cityCodeKey)
   }
 

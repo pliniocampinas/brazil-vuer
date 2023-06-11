@@ -40,6 +40,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, reactive, ref, watch } from 'vue';
 import MapBrowserFormInputs from '@/interfaces/MapBrowserFormInputs'
+import { SourceFormat, ValueType } from '@/interfaces/Enums';
 
 export default defineComponent({
   name: 'MapBrowserForm',
@@ -67,7 +68,9 @@ export default defineComponent({
       title: '',
       sourceUrl: '',
       valueKey: '',
-      valueType: 'numeric',
+      valueType: ValueType.Numeric,
+      sourceFormat: SourceFormat.None,
+      cityCodeKey: '',
     })
     watch(() => props.title, () => formInputs.title = props.title?? '')
 

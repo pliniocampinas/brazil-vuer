@@ -11,7 +11,7 @@
 
       <template v-slot:map-header>
         <MapBrowserHeader
-          :title="mapName"
+          :title="activeMap.title"
           @heading-click="headingClick"
         />
       </template>
@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent, reactive, ref } from 'vue';
 import BrazilMunicipalitiesMap from '@/components/BrazilMunicipalitiesMap.vue'; 
 import MapBrowser from '@/components/MapBrowser.vue'; 
 import MapBrowserForm from '@/components/MapBrowserForm.vue'; 
@@ -48,6 +48,7 @@ import { formatCurrencyBrl } from '@/utils/formatters'
 import { interpolateRdYlGn, scaleQuantile } from "d3";
 import MapBrowserFormInputs from '@/interfaces/MapBrowserFormInputs'
 import MunicipalitiesData from '@/interfaces/MunicipalitiesData';
+import { SourceFormat } from '@/interfaces/Enums';
 
 const getColorFunction = (dataset: number[]) => {
   // Between [0, 1], 5 numbers for 5 tones.
@@ -86,7 +87,14 @@ export default defineComponent({
     const municipalitiesList = ref<MunicipalitiesData[]>([])
     const isLoading = ref(false)
     const isOverlayOpen = ref(false)
-    const mapName = ref('Pib per capita 2019')
+    const activeMap = reactive({
+      title: 'Pib per capita 2019',
+      sourceUrl: '',
+      valueKey: '',
+      valueType: '',
+      sourceFormat: '',
+      cityCodeKey: '',
+    })
 
     const pathMapLoaded = (pathMap: { [code: string] : Element | null; }) => {
       pathElementsMap.value = pathMap
@@ -97,7 +105,12 @@ export default defineComponent({
     const loadData = async () => {
       try {
         isLoading.value = true
-        const data = await fetchData()
+        const data = await fetchData({
+          sourceUrl: activeMap.sourceUrl,
+          valueKey: activeMap.valueKey,
+          sourceFormat: activeMap.sourceFormat as SourceFormat,
+          cityCodeKey: activeMap.cityCodeKey,
+        })
         municipalitiesList.value = data
         isLoading.value = false
       } catch(err) {
@@ -126,13 +139,16 @@ export default defineComponent({
     }
 
     const submitMapForm = (formData: MapBrowserFormInputs) => {
-      console.log('submitMapForm', formData)
+      activeMap.title = formData.title
+      console.log('submitMapForm', formData.title)
+      isOverlayOpen.value = false
+      loadData()
     }
 
     return {
       isLoading,
       isOverlayOpen,
-      mapName,
+      activeMap,
       selectedCityCode,
       selectedCity,
       cityClick: (code: string) => {
