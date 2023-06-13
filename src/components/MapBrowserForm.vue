@@ -3,21 +3,35 @@
     <form class="map-browser-form__form">
 
       <label class="map-browser-form__label"> <div>Título do mapa</div>
-        <input v-model="formInputs.title" class="map-browser-form__input" type="text" placeholder="titulo">
-      </label>
-
-      <label class="map-browser-form__label"> <div>URL fonte dos dados</div>
-        <input v-model="formInputs.sourceUrl" class="map-browser-form__input" type="text" placeholder="url">
+        <input v-model="formInputs.title" class="map-browser-form__input" type="text" placeholder="Novo Mapa">
       </label>
 
       <label class="map-browser-form__label"> <div>Campo chave</div>
-        <input v-model="formInputs.valueKey" class="map-browser-form__input" type="valor principal">
+        <input v-model="formInputs.valueKey" class="map-browser-form__input" type="text" placeholder="valor">
+      </label>
+
+      <label class="map-browser-form__label" full> <div>URL fonte dos dados</div>
+        <input v-model="formInputs.sourceUrl" class="map-browser-form__input" type="text" placeholder="url">
+      </label>
+
+      <label class="map-browser-form__label"> <div>Campo Código IBGE</div>
+        <input v-model="formInputs.cityCodeKey" class="map-browser-form__input" type="text" placeholder="codigo">
       </label>
 
       <label class="map-browser-form__label"> <div>Tipo de dado</div>
         <select class="map-browser-form__input" name="valueType" v-model="formInputs.valueType">
           <option 
             v-for="labelValue in valueTypes"
+            :key="labelValue.value"
+            :value="labelValue.value"
+          >{{labelValue.label}}</option>
+        </select>
+      </label>
+
+      <label class="map-browser-form__label"> <div>Format</div>
+        <select class="map-browser-form__input" name="valueType" v-model="formInputs.sourceFormat">
+          <option 
+            v-for="labelValue in sourceFormats"
             :key="labelValue.value"
             :value="labelValue.value"
           >{{labelValue.label}}</option>
@@ -56,11 +70,21 @@ export default defineComponent({
     const valueTypes = [
       {
         label: 'Numérico',
-        value: 'numeric'
+        value: ValueType.Numeric
       },
       {
         label: 'Categórico',
-        value: 'categoric'
+        value: ValueType.Categoric
+      },
+    ]
+    const sourceFormats = [
+      {
+        label: 'Csv',
+        value: SourceFormat.Csv
+      },
+      {
+        label: 'Json',
+        value: SourceFormat.Json
       },
     ]
     const formErrorMessage = ref('')
@@ -69,7 +93,7 @@ export default defineComponent({
       sourceUrl: '',
       valueKey: '',
       valueType: ValueType.Numeric,
-      sourceFormat: SourceFormat.None,
+      sourceFormat: SourceFormat.Json,
       cityCodeKey: '',
     })
     watch(() => props.title, () => formInputs.title = props.title?? '')
@@ -91,6 +115,8 @@ export default defineComponent({
         sourceUrl: formInputs.sourceUrl,
         valueKey: formInputs.valueKey,
         valueType: formInputs.valueType,
+        sourceFormat: formInputs.sourceFormat,
+        cityCodeKey: formInputs.cityCodeKey,
       } as MapBrowserFormInputs)
     }
 
@@ -123,6 +149,13 @@ export default defineComponent({
         }
       }
 
+      if(!formInputs.sourceFormat) {
+        return {
+          isValid: false,
+          errorMessage: 'Formato inválido',
+        }
+      }
+
       return {
         isValid: true,
         errorMessage: '',
@@ -133,6 +166,7 @@ export default defineComponent({
       formErrorMessage,
       formInputs,
       valueTypes,
+      sourceFormats,
       submit
     }
   }

@@ -48,7 +48,7 @@ import { formatCurrencyBrl } from '@/utils/formatters'
 import { interpolateRdYlGn, scaleQuantile } from "d3";
 import MapBrowserFormInputs from '@/interfaces/MapBrowserFormInputs'
 import MunicipalitiesData from '@/interfaces/MunicipalitiesData';
-import { SourceFormat } from '@/interfaces/Enums';
+import { SourceFormat, ValueType } from '@/interfaces/Enums';
 
 const getColorFunction = (dataset: number[]) => {
   // Between [0, 1], 5 numbers for 5 tones.
@@ -87,12 +87,12 @@ export default defineComponent({
     const municipalitiesList = ref<MunicipalitiesData[]>([])
     const isLoading = ref(false)
     const isOverlayOpen = ref(false)
-    const activeMap = reactive({
+    const activeMap = reactive<MapBrowserFormInputs>({
       title: 'Pib per capita 2019',
       sourceUrl: '',
       valueKey: '',
-      valueType: '',
-      sourceFormat: '',
+      valueType: ValueType.None,
+      sourceFormat: SourceFormat.None,
       cityCodeKey: '',
     })
 
@@ -138,11 +138,16 @@ export default defineComponent({
       isOverlayOpen.value = true
     }
 
-    const submitMapForm = (formData: MapBrowserFormInputs) => {
+    const submitMapForm = async (formData: MapBrowserFormInputs) => {
       activeMap.title = formData.title
-      console.log('submitMapForm', formData.title)
-      isOverlayOpen.value = false
-      loadData()
+      activeMap.cityCodeKey = formData.cityCodeKey
+      activeMap.sourceFormat = formData.sourceFormat
+      activeMap.sourceUrl = formData.sourceUrl
+      activeMap.valueKey = formData.valueKey
+      activeMap.valueType = formData.valueType
+      console.log('submitMapForm', formData)
+      await loadData()
+      // isOverlayOpen.value = false
     }
 
     return {
