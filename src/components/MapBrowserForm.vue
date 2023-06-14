@@ -38,8 +38,8 @@
         </select>
       </label>
 
-      <div v-if="formErrorMessage"  class="map-browser-form__error" full>
-        {{formErrorMessage}}
+      <div v-if="errorMessage"  class="map-browser-form__error" full>
+        {{errorMessage}}
       </div>
       <div 
         class="map-browser-form__button" 
@@ -52,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref, watch } from 'vue';
+import { defineComponent, onMounted, reactive, watch } from 'vue';
 import MapBrowserFormInputs from '@/interfaces/MapBrowserFormInputs'
 import { SourceFormat, ValueType } from '@/interfaces/Enums';
 
@@ -61,6 +61,10 @@ export default defineComponent({
 
   props: {
     title: {
+      type: String,
+      default: ''
+    },
+    errorMessage: {
       type: String,
       default: ''
     },
@@ -87,7 +91,6 @@ export default defineComponent({
         value: SourceFormat.Json
       },
     ]
-    const formErrorMessage = ref('')
     const formInputs = reactive<MapBrowserFormInputs>({
       title: '',
       sourceUrl: '',
@@ -105,10 +108,9 @@ export default defineComponent({
     const submit = () => {
       const formValidation = validateForm()
       if(formValidation.isValid === false) {
-        formErrorMessage.value = formValidation.errorMessage
+        emit('submit-error', formValidation.errorMessage)
         return
       }
-      formErrorMessage.value = ''
 
       emit('submit', {
         title: formInputs.title,
@@ -156,6 +158,13 @@ export default defineComponent({
         }
       }
 
+      if(!formInputs.cityCodeKey) {
+        return {
+          isValid: false,
+          errorMessage: 'Campo código IBGE inválido',
+        }
+      }
+
       return {
         isValid: true,
         errorMessage: '',
@@ -163,7 +172,6 @@ export default defineComponent({
     }
 
     return {
-      formErrorMessage,
       formInputs,
       valueTypes,
       sourceFormats,

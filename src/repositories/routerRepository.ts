@@ -27,7 +27,7 @@ const fetchCsvData = async (csvUrl: string, valueKey: string, cityCodeKey: strin
   const response = await fetch(csvUrl)
 
   if(response.status === 404) {
-    throw Error('Csv Url not found ' + csvUrl)
+    throw Error('Csv Url not found [' + csvUrl + ']')
   }
 
   const csvRows = await response.text()

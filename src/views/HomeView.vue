@@ -6,13 +6,17 @@
       @overlay-close="isOverlayOpen = false"
     >
       <template v-slot:map-overlay>
-        <MapBrowserForm @submit="submitMapForm"/>
+        <MapBrowserForm 
+          :errorMessage="errorMessage"
+          @submit-error="submitMapError"
+          @submit="submitMapForm"
+        />
       </template>
 
       <template v-slot:map-header>
         <MapBrowserHeader
           :title="activeMap.title"
-          @heading-click="headingClick"
+          @heading-click="isOverlayOpen = true"
         />
       </template>
 
@@ -95,6 +99,7 @@ export default defineComponent({
       sourceFormat: SourceFormat.None,
       cityCodeKey: '',
     })
+    const errorMessage = ref('')
 
     const pathMapLoaded = (pathMap: { [code: string] : Element | null; }) => {
       pathElementsMap.value = pathMap
@@ -112,10 +117,12 @@ export default defineComponent({
           cityCodeKey: activeMap.cityCodeKey,
         })
         municipalitiesList.value = data
+        errorMessage.value = ''
         isLoading.value = false
       } catch(err) {
         console.log('load data error', err)
         isLoading.value = false
+        errorMessage.value = (err as Error).message?? ''
       }
     }
 
@@ -134,10 +141,6 @@ export default defineComponent({
       })
     }
 
-    const headingClick = () => {
-      isOverlayOpen.value = true
-    }
-
     const submitMapForm = async (formData: MapBrowserFormInputs) => {
       activeMap.title = formData.title
       activeMap.cityCodeKey = formData.cityCodeKey
@@ -145,12 +148,24 @@ export default defineComponent({
       activeMap.sourceUrl = formData.sourceUrl
       activeMap.valueKey = formData.valueKey
       activeMap.valueType = formData.valueType
-      console.log('submitMapForm', formData)
+
       await loadData()
-      // isOverlayOpen.value = false
+
+      if(errorMessage.value) {
+        console.log('errorMessage', errorMessage.value)
+        return
+      }
+
+      isOverlayOpen.value = false
+      colorizePaths()
+    }
+
+    const submitMapError = (message: string) => {
+      errorMessage.value = message
     }
 
     return {
+      errorMessage,
       isLoading,
       isOverlayOpen,
       activeMap,
@@ -163,11 +178,11 @@ export default defineComponent({
         }
         selectedCityCode.value = code;
       },
-      headingClick,
       formatCurrencyBrl,
       loadData,
       pathMapLoaded,
       submitMapForm,
+      submitMapError,
     }
   }
 });
