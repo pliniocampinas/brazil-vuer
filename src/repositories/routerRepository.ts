@@ -19,11 +19,14 @@ export const fetchData = async (params: fetchDataParams | null = null): Promise<
     return await fetchCsvData(params.sourceUrl, params.valueKey, params.cityCodeKey)
   }
 
+  if(params.sourceFormat === SourceFormat.Json) {
+    return await fetchJsonData(params.sourceUrl, params.valueKey, params.cityCodeKey)
+  }
+
   return await fetchExampleData()
 }
 
 const fetchCsvData = async (csvUrl: string, valueKey: string, cityCodeKey: string): Promise<MunicipalitiesData[]> => {
-  // const csvUrl = 'https://gist.githubusercontent.com/pliniocampinas/3a0b327dbe7180dd984352e1be4b86e9/raw/4c89ca9aa4d46fbb4630e892613492e8593879b0/pib-municipios-2010-2019.csv'
   const response = await fetch(csvUrl)
 
   if(response.status === 404) {
@@ -32,6 +35,23 @@ const fetchCsvData = async (csvUrl: string, valueKey: string, cityCodeKey: strin
 
   const csvRows = await response.text()
     .then(v => csvParse(v))
+
+  return csvRows.map(row => {
+    return {
+      code: row[cityCodeKey] + '',
+      mainValue: parseInt(row[valueKey]?? '0'),
+    }
+  })
+}
+
+const fetchJsonData = async (url: string, valueKey: string, cityCodeKey: string): Promise<MunicipalitiesData[]> => {
+  const response = await fetch(url)
+
+  if(response.status === 404) {
+    throw Error('Json Url not found [' + url + ']')
+  }
+
+  const csvRows = await response.json() as []
 
   return csvRows.map(row => {
     return {
