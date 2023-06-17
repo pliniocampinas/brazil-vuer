@@ -1,5 +1,9 @@
 <template>
   <div class="map-browser-form">
+    <div class="map-browser-form__presets">
+      <div class="map-browser-form__presets-button" @click="fillWithCsvPreset">Preencher Exemplo Csv</div>
+      <div class="map-browser-form__presets-button" @click="$emit('reset-map')">Resetar mapa inicial</div>
+    </div>
     <form class="map-browser-form__form">
 
       <label class="map-browser-form__label"> <div>Título do mapa</div>
@@ -55,6 +59,7 @@
 import { defineComponent, onMounted, reactive, watch } from 'vue';
 import MapBrowserFormInputs from '@/interfaces/MapBrowserFormInputs'
 import { SourceFormat, ValueType } from '@/interfaces/Enums';
+import { buildCsvMapParamsSample } from '@/utils/sampleMapsBuilder'
 
 export default defineComponent({
   name: 'MapBrowserForm',
@@ -158,6 +163,13 @@ export default defineComponent({
         }
       }
 
+      if(formInputs.valueType === ValueType.Categoric) {
+        return {
+          isValid: false,
+          errorMessage: 'Tipo de valor não implementado',
+        }
+      }
+
       if(!formInputs.cityCodeKey) {
         return {
           isValid: false,
@@ -171,10 +183,21 @@ export default defineComponent({
       }
     }
 
+    const fillWithCsvPreset = () => {
+      const sampleInputs = buildCsvMapParamsSample()
+      formInputs.title = sampleInputs.title
+      formInputs.sourceUrl = sampleInputs.sourceUrl
+      formInputs.valueKey = sampleInputs.valueKey
+      formInputs.valueType = sampleInputs.valueType
+      formInputs.sourceFormat = sampleInputs.sourceFormat
+      formInputs.cityCodeKey = sampleInputs.cityCodeKey
+    }
+
     return {
       formInputs,
       valueTypes,
       sourceFormats,
+      fillWithCsvPreset,
       submit
     }
   }
@@ -185,6 +208,24 @@ export default defineComponent({
 .map-browser-form {
   padding: 8px;
   border: 1px solid var(--app-secondary-color);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.map-browser-form__presets {
+  padding: 8px;
+  display: flex;
+  gap: 8px;
+  justify-content: space-around;
+}
+
+.map-browser-form__presets-button {
+  padding: 8px 12px;
+  border: 1px solid var(--app-secondary-color);
+  background-color: #fff;
+  color: var(--app-primary-color);
+  font-weight: bold;
 }
 
 .map-browser-form__form {

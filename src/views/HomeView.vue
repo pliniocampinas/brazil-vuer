@@ -10,6 +10,7 @@
           :errorMessage="errorMessage"
           @submit-error="submitMapError"
           @submit="submitMapForm"
+          @reset-map="resetMap"
         />
       </template>
 
@@ -49,10 +50,11 @@ import MapBrowserMunicipalityDetails from '@/components/MapBrowserMunicipalityDe
 import { fetchNameAndState } from '@/repositories/StaticMunicipalityRepository'
 import { fetchData } from '@/repositories/RouterRepository'
 import { formatCurrencyBrl } from '@/utils/formatters'
+import { buildStaticSample } from '@/utils/sampleMapsBuilder'
 import { interpolateRdYlGn, scaleQuantile } from "d3";
 import MapBrowserFormInputs from '@/interfaces/MapBrowserFormInputs'
 import MunicipalitiesData from '@/interfaces/MunicipalitiesData';
-import { SourceFormat, ValueType } from '@/interfaces/Enums';
+import { SourceFormat } from '@/interfaces/Enums';
 
 const getColorFunction = (dataset: number[]) => {
   // Between [0, 1], 5 numbers for 5 tones.
@@ -91,13 +93,14 @@ export default defineComponent({
     const municipalitiesList = ref<MunicipalitiesData[]>([])
     const isLoading = ref(false)
     const isOverlayOpen = ref(false)
+    const staticSample = buildStaticSample()
     const activeMap = reactive<MapBrowserFormInputs>({
-      title: 'Pib per capita 2019',
-      sourceUrl: '',
-      valueKey: '',
-      valueType: ValueType.None,
-      sourceFormat: SourceFormat.None,
-      cityCodeKey: '',
+      title: staticSample.title,
+      sourceUrl: staticSample.sourceUrl,
+      valueKey: staticSample.valueKey,
+      valueType: staticSample.valueType,
+      sourceFormat: staticSample.sourceFormat,
+      cityCodeKey: staticSample.cityCodeKey,
     })
     const errorMessage = ref('')
 
@@ -152,7 +155,6 @@ export default defineComponent({
       await loadData()
 
       if(errorMessage.value) {
-        console.log('errorMessage', errorMessage.value)
         return
       }
 
@@ -162,6 +164,17 @@ export default defineComponent({
 
     const submitMapError = (message: string) => {
       errorMessage.value = message
+    }
+
+    const resetMap = () => {
+      isOverlayOpen.value = false
+      activeMap.title = staticSample.title
+      activeMap.sourceUrl = staticSample.sourceUrl
+      activeMap.valueKey = staticSample.valueKey
+      activeMap.valueType = staticSample.valueType
+      activeMap.sourceFormat = staticSample.sourceFormat
+      activeMap.cityCodeKey = staticSample.cityCodeKey
+      loadData().then(colorizePaths)
     }
 
     return {
@@ -181,6 +194,7 @@ export default defineComponent({
       formatCurrencyBrl,
       loadData,
       pathMapLoaded,
+      resetMap,
       submitMapForm,
       submitMapError,
     }
