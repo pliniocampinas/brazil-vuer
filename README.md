@@ -1,5 +1,13 @@
 # brazil-viewer
 
+## Exemplos
+<span>
+<img src="https://github.com/pliniocampinas/map-brazil/blob/main/prints-demo/page0.png" alt="Print Mapa de cidades Pib per Capita" style="width:280px;"/>
+</span>
+<span>
+<img src="https://github.com/pliniocampinas/map-brazil/blob/main/prints-demo/page1.png" alt="Print Form" style="width:280px;"/>
+</span>
+
 ## Project setup
 ```
 npm install
