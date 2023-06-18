@@ -12,6 +12,17 @@ export const buildCsvMapParamsSample = (): MapBrowserFormInputs => {
   }
 }
 
+export const buildJsonApiMapParamsSample = (): MapBrowserFormInputs => {
+  return {
+    title: 'Mapa Json Pib',
+    sourceUrl: 'http://127.0.0.1:8125',
+    sourceFormat: SourceFormat.Json,
+    cityCodeKey: 'code',
+    valueKey: 'gdpPerCapitaBrl2019',
+    valueType: ValueType.Numeric,
+  }
+}
+
 export const buildStaticSample = (): MapBrowserFormInputs => {
   return {
     title: 'Pib per capita 2019',

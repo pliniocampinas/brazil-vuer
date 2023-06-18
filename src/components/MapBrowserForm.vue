@@ -2,6 +2,7 @@
   <div class="map-browser-form">
     <div class="map-browser-form__presets">
       <div class="map-browser-form__presets-button" @click="fillWithCsvPreset">Preencher Exemplo Csv</div>
+      <div class="map-browser-form__presets-button" @click="fillWithJsonApiPreset">Preencher Exemplo Api Json</div>
       <div class="map-browser-form__presets-button" @click="$emit('reset-map')">Resetar mapa inicial</div>
     </div>
     <form class="map-browser-form__form">
@@ -59,7 +60,7 @@
 import { defineComponent, onMounted, reactive, watch } from 'vue';
 import MapBrowserFormInputs from '@/interfaces/MapBrowserFormInputs'
 import { SourceFormat, ValueType } from '@/interfaces/Enums';
-import { buildCsvMapParamsSample } from '@/utils/sampleMapsBuilder'
+import { buildCsvMapParamsSample, buildJsonApiMapParamsSample } from '@/utils/sampleMapsBuilder'
 
 export default defineComponent({
   name: 'MapBrowserForm',
@@ -193,11 +194,22 @@ export default defineComponent({
       formInputs.cityCodeKey = sampleInputs.cityCodeKey
     }
 
+    const fillWithJsonApiPreset = () => {
+      const sampleInputs = buildJsonApiMapParamsSample()
+      formInputs.title = sampleInputs.title
+      formInputs.sourceUrl = sampleInputs.sourceUrl
+      formInputs.valueKey = sampleInputs.valueKey
+      formInputs.valueType = sampleInputs.valueType
+      formInputs.sourceFormat = sampleInputs.sourceFormat
+      formInputs.cityCodeKey = sampleInputs.cityCodeKey
+    }
+    
     return {
       formInputs,
       valueTypes,
       sourceFormats,
       fillWithCsvPreset,
+      fillWithJsonApiPreset,
       submit
     }
   }

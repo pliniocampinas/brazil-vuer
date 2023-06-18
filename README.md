@@ -15,9 +15,9 @@ npm run serve
 npm run build
 ```
 
-### Run your unit tests
+### Run mock api on http://127.0.0.1:8125/
 ```
-npm run test:unit
+npm run mock-api
 ```
 
 ### Lints and fixes files
@@ -30,5 +30,6 @@ npm run lint
 
 - [x] Exibir mapa. 
 - [x] Exibir dados mockados. 
-- [ ] Exibir dados de uma api local. 
-- [ ] Configurar UI para escolher uma fonte de dados qualquer(api, arquivos json, csv, etc.)
+- [x] Exibir dados de uma api local. 
+- [x] Configurar UI para escolher uma fonte de dados qualquer(api, arquivos json, csv, etc.)
+- [ ] Desenhar mapas com dados não numéricos(categoricos, ordinais e etc).
